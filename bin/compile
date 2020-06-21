@@ -18,6 +18,14 @@ function message {
   sync
 }
 
+BUILD_BIN=`ls -l $1`
+CACHE_BIN=`ls -l $2`
+ENV_BIN=`ls -l $3`
+
+message "-----> Build directory: $BUILD_BIN"
+message "-----> Cache directory: $CACHE_BIN"
+message "-----> Env directory: $ENV_BIN"
+
 # https://devcenter.heroku.com/articles/buildpack-api
 export_env_dir() {
   env_dir=$1
@@ -111,6 +119,8 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
     FLUTTER_DOCTOR='$CACHE_DIR/flutter/bin/flutter doctor'
 
     
+    message "$($FLUTTER_DOCTOR | grep Web)"
+
     if [ -z "$($FLUTTER_DOCTOR | grep Web)" ]; then
 
       message "Flutter WEB Nao Habilitado"
