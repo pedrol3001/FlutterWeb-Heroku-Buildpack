@@ -109,16 +109,16 @@ message "-----> Flutter Framework Found: $FLUTTER_BIN"
 
 message "Copying to BUILD_DIR"
 
-cp -r $CACHE_DIR/flutter $BUILD_DIR
+cp -R $CACHE_DIR/flutter $BUILD_DIR
 
 message "Copying to /app"
 
-cp -r $CACHE_DIR/flutter /app
+cp -R $CACHE_DIR/flutter /app
 
 
 /app/flutter/bin/flutter --version
 
-cd %BUILD_DIR
+cd $BUILD_DIR
 
 message "*** Enabling Flutter Web And Updating Dependencies"
 
@@ -141,7 +141,7 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
  
 done
 
-  cd %BUILD_DIR
+  cd $BUILD_DIR
 
   message "Buildind App"
 
