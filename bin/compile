@@ -140,7 +140,13 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
 
       message "*** Enable Flutter Web"
 
+      $CACHE_DIR/flutter/bin/flutter channel beta
+
+      $CACHE_DIR/flutter/bin/flutter upgrade beta
+
       $CACHE_DIR/flutter/bin/flutter config --enable-web
+
+      $CACHE_DIR/flutter/bin/flutter devices
 
 
     
