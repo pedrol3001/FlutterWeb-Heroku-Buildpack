@@ -3,6 +3,6 @@
 cat << EOF
 ---
 
-default_process_types:
-  web: /app/run
+config_vars:
+  PATH: /app/flutter/bin:/usr/local/bin:/usr/bin:/bin
 EOF
