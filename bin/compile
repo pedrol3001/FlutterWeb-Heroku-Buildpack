@@ -101,11 +101,20 @@ case  "${FLUTTER_SDK_URL: (-3)}"  in
 esac
 
 
+
 FLUTTER_BIN=`ls -l $CACHE_DIR/flutter/bin/flutter`
 message "-----> Flutter Framework Found: $FLUTTER_BIN"
 
+message "Copying to BUILD_DIR"
 
-$CACHE_DIR/flutter/bin/flutter --version
+cp -r $CACHE_DIR/flutter $BUILD_DIR
+
+message "Copying to /app"
+
+cp -r $CACHE_DIR/flutter /app
+
+
+/app/flutter/bin/flutter --version
 
 cd $BUILD_DIR
 
@@ -116,57 +125,43 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
 
     message "*** Running Flutter Doctor"
 
-    FLUTTER_DOCTOR='$CACHE_DIR/flutter/bin/flutter doctor'
+    FLUTTER_DOCTOR=' /app/flutter/bin/flutter doctor'
+
+
+    #if [ -z "$($FLUTTER_DOCTOR | grep channel beta)" ]; then
+    
+      # NOT WORKING
+
+      #message "*** Changing Flutter Channel To Beta"
+
+      #git reset --hard
+
+      #/app/flutter/bin/flutter channel beta
 
     
-    message "$($FLUTTER_DOCTOR | grep Web)"
+    #fi
 
-    if [ -z "$($FLUTTER_DOCTOR | grep Web)" ]; then
+    message "*** Enabling Flutter Web"
 
-      message "Flutter WEB Nao Habilitado"
+    /app/flutter/bin/flutter channel beta
 
-      #if [ -z "$($FLUTTER_DOCTOR | grep channel beta)" ]; then
-      
-        # NOT WORKING
+    /app/flutter/bin/flutter upgrade beta
 
-        #message "*** Changing Flutter Channel To Beta"
+    /app/flutter/bin/flutter config --enable-web
 
-        #git reset --hard
-
-        #$CACHE_DIR/flutter/bin/flutter channel beta
-
-      
-      #fi
-
-      message "*** Enable Flutter Web"
-
-      $CACHE_DIR/flutter/bin/flutter channel beta
-
-      $CACHE_DIR/flutter/bin/flutter upgrade beta
-
-      $CACHE_DIR/flutter/bin/flutter config --enable-web
-
-      $CACHE_DIR/flutter/bin/flutter devices
+    /app/flutter/bin/flutter devices
 
 
-    
-    else
-
-
-      message "Flutter WEB Já Habilitado"
-        
-
-    fi
 
     message "*** Running pub get"
 
-    $CACHE_DIR/flutter/bin/flutter pub get
+    /app/flutter/bin/flutter pub get
     
 
 done
 
 message "-----> Exporting Cache Dir"
 
-cp -r $CACHE_DIR $BUILD_DIR/sdk
+cp -R $PUB_CACHE $BUILD_DIR/pub-cache
 
 message "Finished"
