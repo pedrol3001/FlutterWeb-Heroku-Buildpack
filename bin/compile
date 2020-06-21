@@ -18,9 +18,9 @@ function message {
   sync
 }
 
-BUILD_BIN=`pwd $1`
-CACHE_BIN=`pwd $2`
-ENV_BIN=`pwd $3`
+BUILD_BIN=`cd $1 && pwd && ls -l`
+CACHE_BIN=`cd $2 && pwd && ls -l`
+ENV_BIN=`cd $3 && pwd && ls -l`
 
 message "-----> Build directory: $BUILD_BIN"
 message "-----> Cache directory: $CACHE_BIN"
@@ -103,11 +103,8 @@ message "-----> Flutter Framework Found: $FLUTTER_BIN"
 
 
 $CACHE_DIR/flutter/bin/flutter --version
-#message "-----> Flutter version: $CAN_FLUTTER_RUN"
 
 cd $BUILD_DIR
-
-
 
 for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache`; do
     pub_dir=`dirname $filename`
