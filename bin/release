@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cat << EOF
+---
+
+default_process_types:
+  web: /app/flutter/bin/flutter run web --webport 80
+EOF

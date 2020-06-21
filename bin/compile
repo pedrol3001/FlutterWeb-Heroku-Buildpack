@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+# Fail immediately on non-zero exit code.
+set -e
+# Fail immediately on non-zero exit code within a pipeline.
+set -o pipefail
+# Fail on undeclared variables.
+set -u
+# Debug, echo every command
+#set -x
+
+
+unset GIT_DIR
+
+function message {
+  echo "$1"
+  sync
+}
+
+# https://devcenter.heroku.com/articles/buildpack-api
+export_env_dir() {
+  env_dir=$1
+  message "-----> ENV_DIR is $env_dir"
+  whitelist_regex=${2:-''}
+  blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
+  if [ -d "$env_dir" ]; then
+    for e in $(ls $env_dir); do
+      message "-----> ENV_DIR contains file $e"
+      echo "$e" | grep -E "$whitelist_regex" | grep -qvE "$blacklist_regex" &&
+      export "$e=$(cat $env_dir/$e)"
+      :
+    done
+  fi
+}
+
+export_env_dir "$3"
+
+mkdir -p "$1" "$2"
+BUILD_DIR=$(cd "$1/" && pwd)
+CACHE_DIR=$(cd "$2/" && pwd)
+
+PUB_CACHE="$CACHE_DIR/pub-cache"
+export PUB_CACHE
+mkdir -p $PUB_CACHE
+
+
+MACHINE=`uname -a`
+message "-----> Welcome, this machine is: $MACHINE"
+
+if [ -z "$FLUTTER_SDK_URL" ]; then
+    message "ERROR: you must specify FLUTTER_SDK_URL to a Dart SDK for Linux. See README for this buildpack."
+    exit 1
+fi
+
+cd $CACHE_DIR
+
+case  "${FLUTTER_SDK_URL: (-3)}"  in
+
+    git)
+      message "SDK: Git Detected"
+      rm -f -R flutter
+      git clone -b beta $FLUTTER_SDK_URL
+      ;;
+
+    .xz)
+      message "SDK: Tar.xz Detected"
+      message "Flutter Web still in BETA. We recomend usibg git url in case this tar.xz ends in error"
+      curl -L -k $FLUTTER_SDK_URL > flutter.tar.xz ; tar -xvf flutter.tar.xz
+      ;;
+
+    zip)
+      message "SDK: Zip Detected"
+      message "Flutter Web still in BETA. We recomend usibg git url in case this zip ends in error"
+      curl -L -k $FLUTTER_SDK_URL > flutter.zip ; unzip -o -q flutter.zip
+      ;;
+
+    deb)
+      message "SDK: Deb Detected"
+  # TODO
+      message "Please use the .tar.xz Flutter SDK"
+      ;;
+
+    *)
+
+      message "Invalid Flutter SDK URL" #kill after this or keep going in case SDK is there from last push?
+      
+      ;;
+
+esac
+
+
+FLUTTER_BIN=`ls -l $CACHE_DIR/flutter/bin/flutter`
+message "-----> Flutter Framework Found: $FLUTTER_BIN"
+
+
+$CACHE_DIR/flutter/bin/flutter --version
+#message "-----> Flutter version: $CAN_FLUTTER_RUN"
+
+cd $BUILD_DIR
+
+
+
+for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache`; do
+    pub_dir=`dirname $filename`
+    message "*** Found pubspec.yaml in $BUILD_DIR/$pub_dir"
+    cd $BUILD_DIR/$pub_dir
+
+    message "*** Running Flutter Doctor"
+
+    FLUTTER_DOCTOR='$CACHE_DIR/flutter/bin/flutter doctor'
+
+    
+    if [ -z "$($FLUTTER_DOCTOR | grep Web)" ]; then
+
+      message "Flutter WEB Nao Habilitado"
+
+      if [ -z "$($FLUTTER_DOCTOR | grep channel beta)" ]; then
+      
+        # NOT WORKING
+
+        message "*** Changing Flutter Channel To Beta"
+
+        git reset --hard
+
+        $CACHE_DIR/flutter/bin/flutter channel beta
+
+      
+      fi
+
+      message "*** Enable Flutter Web"
+
+      $CACHE_DIR/flutter/bin/flutter config --enable-web
+
+
+    
+    else
+
+
+      message "Flutter WEB Já Habilitado"
+        
+
+    fi
+
+    message "*** Running pub get"
+
+    $CACHE_DIR/flutter/bin/flutter pub get
+    
+
+done
+
+message "-----> Exporting Cache Dir"
+
+export $CACHE_DIR/flutter/bin
+
+message "Finished"
