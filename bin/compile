@@ -107,9 +107,6 @@ esac
 FLUTTER_BIN=`ls -l $CACHE_DIR/flutter/bin/flutter`
 message "-----> Flutter Framework Found: $FLUTTER_BIN"
 
-message "Copying to BUILD_DIR"
-
-cp -R $CACHE_DIR/flutter $BUILD_DIR
 
 message "Copying to /app"
 
@@ -122,13 +119,13 @@ cd $BUILD_DIR
 
 message "*** Enabling Flutter Web And Updating Dependencies"
 
-/flutter/bin/flutter channel beta
+/app/flutter/bin/flutter channel beta
 
-/flutter/bin/flutter upgrade
+/app/flutter/bin/flutter upgrade
 
-/flutter/bin/flutter config --enable-web
+/app/flutter/bin/flutter config --enable-web
 
-/flutter/bin/flutter doctor | grep beta
+/app/flutter/bin/flutter doctor | grep beta
 
 
 for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache`; do
@@ -150,6 +147,13 @@ done
 
 message "-----> Exporting Cache Dir"
 
+
+
+message "Copying to BUILD_DIR"
+
+cp -R /app/flutter $BUILD_DIR
+
 cp -R $PUB_CACHE $BUILD_DIR/pub-cache
+
 
 message "Finished"
