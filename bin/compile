@@ -128,20 +128,7 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
     FLUTTER_DOCTOR=' /app/flutter/bin/flutter doctor'
 
 
-    #if [ -z "$($FLUTTER_DOCTOR | grep channel beta)" ]; then
-    
-      # NOT WORKING
-
-      #message "*** Changing Flutter Channel To Beta"
-
-      #git reset --hard
-
-      #/app/flutter/bin/flutter channel beta
-
-    
-    #fi
-
-    message "*** Enabling Flutter Web"
+    message "*** Enabling Flutter Web And Updating Dependencies"
 
     /app/flutter/bin/flutter channel beta
 
@@ -151,11 +138,11 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
 
     /app/flutter/bin/flutter devices
 
-    /app/flutter/bin/flutter precache
-
-    message "*** Running pub get"
+    /app/flutter/bin/flutter build web
 
     /app/flutter/bin/flutter pub get
+
+    message "*** Running pub get"
     
 
 done
