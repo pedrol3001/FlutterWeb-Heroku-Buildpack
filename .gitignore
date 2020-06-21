@@ -1,3 +1,6 @@
 *.zip
 *.tar.xz
 /flutter/
+/example/
+/cache_example/
+/env_example/

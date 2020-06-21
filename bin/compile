@@ -151,6 +151,6 @@ done
 
 message "-----> Exporting Cache Dir"
 
-export $CACHE_DIR/flutter/bin
+export flutter=$CACHE_DIR/flutter/bin/flutter
 
 message "Finished"
