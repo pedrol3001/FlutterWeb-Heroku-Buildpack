@@ -119,11 +119,11 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
       
         # NOT WORKING
 
-        message "*** Changing Flutter Channel To Beta"
+        #message "*** Changing Flutter Channel To Beta"
 
-        git reset --hard
+        #git reset --hard
 
-        $CACHE_DIR/flutter/bin/flutter channel beta
+        #$CACHE_DIR/flutter/bin/flutter channel beta
 
       
       fi
