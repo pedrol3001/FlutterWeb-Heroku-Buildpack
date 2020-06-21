@@ -4,5 +4,5 @@ cat << EOF
 ---
 
 default_process_types:
-  web: /app/flutter/bin/flutter run -d web-server --web-port $PORT
+  web: /app/run
 EOF
