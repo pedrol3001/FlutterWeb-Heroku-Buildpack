@@ -53,7 +53,7 @@ CACHE_DIR=$(cd "$2/" && pwd)
 
 message "Setting PUB_CACHE"
 
-PUB_CACHE="/app/pub-cache"
+PUB_CACHE="$BUILD_DIR/pub-cache"
 export PUB_CACHE
 mkdir -p $PUB_CACHE
 
@@ -151,10 +151,7 @@ message "-----> Exporting Cache Dir"
 
 
 
-message "Copying to BUILD_DIR"
-
-
-cp -R $PUB_CACHE $BUILD_DIR/pub-cache
+#cp -R $PUB_CACHE $BUILD_DIR/pub-cache
 
 
 message "Finished"
