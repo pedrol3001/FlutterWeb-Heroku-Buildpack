@@ -51,6 +51,8 @@ mkdir -p "$1" "$2"
 BUILD_DIR=$(cd "$1/" && pwd)
 CACHE_DIR=$(cd "$2/" && pwd)
 
+message "Setting PUB_CACHE"
+
 PUB_CACHE="/app/pub-cache"
 export PUB_CACHE
 mkdir -p $PUB_CACHE
@@ -116,31 +118,35 @@ cp -r $CACHE_DIR/flutter /app
 
 /app/flutter/bin/flutter --version
 
-cd $BUILD_DIR
+cd %BUILD_DIR
+
+message "*** Enabling Flutter Web And Updating Dependencies"
+
+/flutter/bin/flutter channel beta
+
+/flutter/bin/flutter upgrade
+
+/flutter/bin/flutter config --enable-web
+
+/flutter/bin/flutter doctor | grep beta
+
 
 for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache`; do
     pub_dir=`dirname $filename`
     message "*** Found pubspec.yaml in $BUILD_DIR/$pub_dir"
     cd $BUILD_DIR/$pub_dir
 
-    message "*** Enabling Flutter Web And Updating Dependencies"
-
-    /app/flutter/bin/flutter channel beta
-
-    /app/flutter/bin/flutter upgrade
-
-    /app/flutter/bin/flutter config --enable-web
-
-    /app/flutter/bin/flutter doctor
-
-    message "Buildind App"
-
     /app/flutter/bin/flutter pub get
-
-    /app/flutter/bin/flutter build web
-
-  
+   
+ 
 done
+
+  cd %BUILD_DIR
+
+  message "Buildind App"
+
+  /app/flutter/bin/flutter build web
+
 
 message "-----> Exporting Cache Dir"
 
