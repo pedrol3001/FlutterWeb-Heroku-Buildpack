@@ -158,6 +158,6 @@ done
 
 message "-----> Exporting Cache Dir"
 
-cp -r $CACHE_DIR $BUILD_DIR
+cp -r $CACHE_DIR $BUILD_DIR/sdk
 
 message "Finished"
