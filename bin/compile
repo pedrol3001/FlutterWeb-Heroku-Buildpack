@@ -151,7 +151,7 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
 
     /app/flutter/bin/flutter devices
 
-
+    /app/flutter/bin/flutter precache
 
     message "*** Running pub get"
 
