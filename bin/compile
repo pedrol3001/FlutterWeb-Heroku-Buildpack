@@ -51,7 +51,7 @@ mkdir -p "$1" "$2"
 BUILD_DIR=$(cd "$1/" && pwd)
 CACHE_DIR=$(cd "$2/" && pwd)
 
-PUB_CACHE="$CACHE_DIR/pub-cache"
+PUB_CACHE="/app/pub-cache"
 export PUB_CACHE
 mkdir -p $PUB_CACHE
 
@@ -123,30 +123,23 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
     message "*** Found pubspec.yaml in $BUILD_DIR/$pub_dir"
     cd $BUILD_DIR/$pub_dir
 
-    message "*** Running Flutter Doctor"
-
-    FLUTTER_DOCTOR=' /app/flutter/bin/flutter doctor'
-
-
     message "*** Enabling Flutter Web And Updating Dependencies"
 
     /app/flutter/bin/flutter channel beta
 
-    /app/flutter/bin/flutter upgrade beta
+    /app/flutter/bin/flutter upgrade
 
     /app/flutter/bin/flutter config --enable-web
 
-    /app/flutter/bin/flutter devices
-
-    /app/flutter/bin/flutter build web
-
     /app/flutter/bin/flutter doctor
+
+    message "Buildind App"
 
     /app/flutter/bin/flutter pub get
 
-    message "*** Running pub get"
-    
+    /app/flutter/bin/flutter build web
 
+  
 done
 
 message "-----> Exporting Cache Dir"
