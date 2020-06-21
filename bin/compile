@@ -115,7 +115,7 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
 
       message "Flutter WEB Nao Habilitado"
 
-      if [ -z "$($FLUTTER_DOCTOR | grep channel beta)" ]; then
+      #if [ -z "$($FLUTTER_DOCTOR | grep channel beta)" ]; then
       
         # NOT WORKING
 
@@ -126,7 +126,7 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
         #$CACHE_DIR/flutter/bin/flutter channel beta
 
       
-      fi
+      #fi
 
       message "*** Enable Flutter Web"
 
