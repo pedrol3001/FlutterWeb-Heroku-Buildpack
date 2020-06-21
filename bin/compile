@@ -23,8 +23,11 @@ CACHE_BIN=`cd $2 && pwd && ls -l`
 ENV_BIN=`cd $3 && pwd && ls -l`
 
 message "-----> Build directory: $BUILD_BIN"
+message ""
 message "-----> Cache directory: $CACHE_BIN"
+message ""
 message "-----> Env directory: $ENV_BIN"
+message ""
 
 # https://devcenter.heroku.com/articles/buildpack-api
 export_env_dir() {
