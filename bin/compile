@@ -18,9 +18,9 @@ function message {
   sync
 }
 
-BUILD_BIN=`ls -l $1`
-CACHE_BIN=`ls -l $2`
-ENV_BIN=`ls -l $3`
+BUILD_BIN=`pwd $1`
+CACHE_BIN=`pwd $2`
+ENV_BIN=`pwd $3`
 
 message "-----> Build directory: $BUILD_BIN"
 message "-----> Cache directory: $CACHE_BIN"
