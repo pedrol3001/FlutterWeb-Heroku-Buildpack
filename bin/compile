@@ -140,6 +140,8 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
 
     /app/flutter/bin/flutter build web
 
+    /app/flutter/bin/flutter doctor
+
     /app/flutter/bin/flutter pub get
 
     message "*** Running pub get"

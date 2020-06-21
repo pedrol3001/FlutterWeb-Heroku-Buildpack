@@ -3,7 +3,9 @@
 # bin/detect <build-dir>
 set -e
 
-if (test -n "$(find "$1" -type f -name 'main.dart' | sed 1q)") && (test -n "$(find "$1" -type f -name 'index.html' | sed 1q)") && (test -n "$(find "$1" -type f -name 'pubspec.yaml' | sed 1q)")
+if (test -n "$(find "$1" -type f -name 'main.dart' | sed 1q)") 
+    && (test -n "$(find "$1" -type f -name 'index.html' | sed 1q)") 
+    && (test -n "$(find "$1" -type f -name 'pubspec.yaml' | sed 1q)")
 then echo Flutter; exit 0
 else echo No; exit 1
 fi
