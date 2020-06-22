@@ -62,9 +62,9 @@ MACHINE=`uname -a`
 message "-----> Welcome, this machine is: $MACHINE"
 
 
-if (test -n "$(find "/app/flutter/bin" -type f -name 'flutter' | sed 1q)")
+if (test -n "$(find "/app/flutter/bin" -type f -name 'flutter' | sed 1q)"); then
 
-
+  message "Flutter Found At /app"
 
   FLUTTER='/app/flutter/bin/flutter devices | grep web-server'
 
@@ -137,10 +137,6 @@ if (test -n "$(find "/app/flutter/bin" -type f -name 'flutter' | sed 1q)")
 
 
   fi
-
-else 
-
-  message 'Flutter found at /app'
 
 fi
 
