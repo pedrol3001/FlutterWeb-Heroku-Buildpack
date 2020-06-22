@@ -53,7 +53,7 @@ CACHE_DIR=$(cd "$2/" && pwd)
 
 message "Setting PUB_CACHE"
 
-PUB_CACHE="$BUILD_DIR/pub-cache"
+PUB_CACHE="$CACHE_DIR/pub-cache"
 export PUB_CACHE
 mkdir -p $PUB_CACHE
 
@@ -107,27 +107,17 @@ esac
 FLUTTER_BIN=`ls -l $CACHE_DIR/flutter/bin/flutter`
 message "-----> Flutter Framework Found: $FLUTTER_BIN"
 
-
-message "Copying to /app"
-
-cp -r $CACHE_DIR/flutter $BUILD_DIR
-
-cp -r $CACHE_DIR/flutter /app
-
-
-/app/flutter/bin/flutter --version
-
-cd $BUILD_DIR
+$CACHE_DIR/flutter/bin/flutter --version
 
 message "*** Enabling Flutter Web And Updating Dependencies"
 
-/app/flutter/bin/flutter channel beta
+$CACHE_DIR/flutter/bin/flutter channel beta
 
-/app/flutter/bin/flutter upgrade
+$CACHE_DIR/flutter/bin/flutter upgrade
 
-/app/flutter/bin/flutter config --enable-web
+$CACHE_DIR/flutter/bin/flutter config --enable-web
 
-/app/flutter/bin/flutter doctor
+$CACHE_DIR/flutter/bin/flutter doctor | grep beta
 
 
 for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache`; do
@@ -135,7 +125,7 @@ for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache
     message "*** Found pubspec.yaml in $BUILD_DIR/$pub_dir"
     cd $BUILD_DIR/$pub_dir
 
-    /app/flutter/bin/flutter pub get
+    $CACHE_DIR/flutter/bin/flutter pub get
    
  
 done
@@ -144,14 +134,7 @@ done
 
   message "Buildind App"
 
-  /app/flutter/bin/flutter build web
-
-
-message "-----> Exporting Cache Dir"
-
-
-
-#cp -R $PUB_CACHE $BUILD_DIR/pub-cache
+  $CACHE_DIR/flutter/bin/flutter build web
 
 
 message "Finished"
