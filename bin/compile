@@ -69,93 +69,99 @@ if (test -n "$(find "/app/flutter/bin" -type f -name 'flutter' | sed 1q)"); then
   FLUTTER='/app/flutter/bin/flutter devices | grep web-server'
 
 
-
   if [ -z "$FLUTTER" ]; then
 
-
-    if [ -z "$FLUTTER_SDK_URL" ]; then
-        message "ERROR: you must specify FLUTTER_SDK_URL to a Dart SDK for Linux. See README for this buildpack."
-        exit 1
-    fi
-
-    cd $CACHE_DIR
-
-    case  "${FLUTTER_SDK_URL: (-3)}"  in
-
-        git)
-          message "SDK: Git Detected"
-          rm -f -R flutter
-          git clone -b beta $FLUTTER_SDK_URL
-          ;;
-
-        .xz)
-          message "SDK: Tar.xz Detected"
-          message "Flutter Web still in BETA. We recomend usibg git url in case this tar.xz ends in error"
-          curl -L -k $FLUTTER_SDK_URL > flutter.tar.xz ; tar -xvf flutter.tar.xz
-          ;;
-
-        zip)
-          message "SDK: Zip Detected"
-          message "Flutter Web still in BETA. We recomend usibg git url in case this zip ends in error"
-          curl -L -k $FLUTTER_SDK_URL > flutter.zip ; unzip -o -q flutter.zip
-          ;;
-
-        deb)
-          message "SDK: Deb Detected"
-      # TODO
-          message "Please use the .tar.xz Flutter SDK"
-          ;;
-
-        *)
-
-          message "Invalid Flutter SDK URL" #kill after this or keep going in case SDK is there from last push?
-          
-          ;;
-
-    esac
-
-
-
-    FLUTTER_BIN=`ls -l $CACHE_DIR/flutter/bin/flutter`
-    message "-----> Flutter Framework Found: $FLUTTER_BIN"
-
-    $CACHE_DIR/flutter/bin/flutter --version
-
-    message "*** Enabling Flutter Web And Updating Dependencies"
-
-    $CACHE_DIR/flutter/bin/flutter channel beta
-
-    $CACHE_DIR/flutter/bin/flutter config --enable-web
-
-    $CACHE_DIR/flutter/bin/flutter doctor | grep beta
+  message "Flutter Web Configured"
 
   else
 
 
-    message 'Flutter Web Enabled'
-    message $FLUTTER
-
+  message "Configure Flutter Web"
 
   fi
 
+
+else
+
+  message "There is no FLutter in your /app"
+
+  message "Using Cache Build. It will not persist"
+
+  if [ -z "$FLUTTER_SDK_URL" ]; then
+      message "ERROR: you must specify FLUTTER_SDK_URL to a Dart SDK for Linux. See README for this buildpack."
+      exit 1
+  fi
+
+  cd $CACHE_DIR
+
+  case  "${FLUTTER_SDK_URL: (-3)}"  in
+
+      git)
+        message "SDK: Git Detected"
+        rm -f -R flutter
+        git clone -b beta $FLUTTER_SDK_URL
+        ;;
+
+      .xz)
+        message "SDK: Tar.xz Detected"
+        message "Flutter Web still in BETA. We recomend usibg git url in case this tar.xz ends in error"
+        curl -L -k $FLUTTER_SDK_URL > flutter.tar.xz ; tar -xvf flutter.tar.xz
+        ;;
+
+      zip)
+        message "SDK: Zip Detected"
+        message "Flutter Web still in BETA. We recomend usibg git url in case this zip ends in error"
+        curl -L -k $FLUTTER_SDK_URL > flutter.zip ; unzip -o -q flutter.zip
+        ;;
+
+      deb)
+        message "SDK: Deb Detected"
+    # TODO
+        message "Please use the .tar.xz Flutter SDK"
+        ;;
+
+      *)
+
+        message "Invalid Flutter SDK URL" #kill after this or keep going in case SDK is there from last push?
+        
+        ;;
+
+  esac
+
+
+
+  FLUTTER_BIN=`ls -l $CACHE_DIR/flutter/bin/flutter`
+  message "-----> Flutter Framework Found: $FLUTTER_BIN"
+
+  $CACHE_DIR/flutter/bin/flutter --version
+
+  message "*** Enabling Flutter Web And Updating Dependencies"
+
+  $CACHE_DIR/flutter/bin/flutter channel beta
+
+  $CACHE_DIR/flutter/bin/flutter config --enable-web
+
+  $CACHE_DIR/flutter/bin/flutter doctor | grep beta
+
+
+
+  for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache`; do
+      pub_dir=`dirname $filename`
+      message "*** Found pubspec.yaml in $BUILD_DIR/$pub_dir"
+      cd $BUILD_DIR/$pub_dir
+
+      $CACHE_DIR/flutter/bin/flutter pub get
+    
+
+  done
+
+    cd $BUILD_DIR
+
+    message "Buildind App"
+
+    $CACHE_DIR/flutter/bin/flutter build web
+
+
 fi
-
-
-for filename in `find . -name pubspec.yaml | grep -v flutter | grep -v pub-cache`; do
-    pub_dir=`dirname $filename`
-    message "*** Found pubspec.yaml in $BUILD_DIR/$pub_dir"
-    cd $BUILD_DIR/$pub_dir
-
-    $CACHE_DIR/flutter/bin/flutter pub get
-   
- 
-done
-
-  cd $BUILD_DIR
-
-  message "Buildind App"
-
-  $CACHE_DIR/flutter/bin/flutter build web
-
 
 message "Finished"
