@@ -62,7 +62,7 @@ MACHINE=`uname -a`
 message "-----> Welcome, this machine is: $MACHINE"
 
 
-FLUTTER=/app/flutter/bin/flutter --version | grep Flutter
+FLUTTER='/app/flutter/bin/flutter --version | grep Flutter'
 
 if [ -z "$FLUTTER" ]; then
 
