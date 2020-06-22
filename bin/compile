@@ -10,7 +10,6 @@ set -u
 # Debug, echo every command
 #set -x
 
-
 unset GIT_DIR
 
 function message {
@@ -21,6 +20,8 @@ function message {
 BUILD_BIN=`cd $1 && pwd && ls -l`
 CACHE_BIN=`cd $2 && pwd && ls -l`
 ENV_BIN=`cd $3 && pwd && ls -l`
+
+message "----------------------- INFO ------------------------"
 
 message "-----> Build directory: $BUILD_BIN"
 message ""
@@ -62,30 +63,34 @@ MACHINE=`uname -a`
 message "-----> Welcome, this machine is: $MACHINE"
 
 
+
+message "----------------------- BUILD ------------------------"
+
+
 if (test -n "$(find "/app/flutter/bin" -type f -name 'flutter' | sed 1q)"); then
 
-  message "Flutter Found At /app"
+  message "-----> Flutter Found At /app"
 
   FLUTTER='/app/flutter/bin/flutter devices | grep web-server'
 
 
   if [ -z "$FLUTTER" ]; then
 
-  message "Flutter Web Configured"
+  message "-----> Flutter Web Configured"
 
   else
 
 
-  message "Configure Flutter Web"
+  message "-----> Configure Flutter Web"
 
   fi
 
 
 else
 
-  message "There is no FLutter in your /app"
+  message "-----> There is no FLutter in your /app"
 
-  message "Using Cache Build. It will not persist"
+  message "-----> Using Cache Build. It will not persist"
 
   if [ -z "$FLUTTER_SDK_URL" ]; then
       message "ERROR: you must specify FLUTTER_SDK_URL to a Dart SDK for Linux. See README for this buildpack."
@@ -157,11 +162,11 @@ else
 
     cd $BUILD_DIR
 
-    message "Buildind App"
+    message "*** Buildind App"
 
     $CACHE_DIR/flutter/bin/flutter build web
 
 
 fi
 
-message "Finished"
+message "-----> Finished"
