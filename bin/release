@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# bin/release <build-dir>
 
-cat << EOF
+cat <<EOF
 ---
-
-config_vars:
-  PATH: /app/flutter/bin:/usr/local/bin:/usr/bin:/bin
+addons: []
+default_process_types:
+  web: bin/boot
 EOF
