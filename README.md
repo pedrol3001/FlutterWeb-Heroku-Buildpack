@@ -14,8 +14,8 @@
 Firsts things first you will need a project at **[Heroku]** and a compiled **[Flutter SDK URL]**. (Works with **[flutter github project]** (**recommended**), still trying to develop a way to use compiled versions like .tar.gz and .zip files)
 
 ```sh
-heroku create myfirstherokuflutterwebproject
-heroku config:set FLUTTER_SDK_URL=<flutter git url>
+$ heroku create myfirstherokuflutterwebproject
+$ heroku config:set FLUTTER_SDK_URL=<flutter git url>
 ```
 
 To get it actually working you shall use the **[Heroku Static Buildpack]**, set it to load after the flutter buildpack. Your static.json should have this config.
@@ -32,8 +32,8 @@ Obs²: Since the flutter build does not provide a server we need to use this bui
 
 Then you shall push the app to Heroku. You can learn more about deploying to Heroku with git [in this link].
 
-```git
-git push heroku master
+```sh
+$ git push heroku master
 ```
 
 Then, have fun! Your site should be deployed in any time at the URL given to you trough this last code.
